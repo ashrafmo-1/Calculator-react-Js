@@ -3,123 +3,48 @@ import {useState, useEffect} from "react";
 import { NumericFormat } from 'react-number-format';
 
 function App() {
+    const [valueNum, setValueNum] = useState('');
 
-const [preState, setPreState] = useState('')
-const [currState, setCurrState] = useState('')
-const [input, setInput] = useState('')
-const [operator, setOperator] = useState(null)
-const [total, setTotal] = useState(false)
-
-    const inputNumber = (num) =>{
-        if(currState.includes('.') && num.target.innerText === '.') return
-        if (total) setPreState('')
-
-        currState ? setCurrState((prev) => prev + num.target.innerText) : setCurrState(num.target.innerText);
-    }
-    useEffect(() => {
-        setInput(currState)
-    }, [currState]);
-
-    useEffect(() => {
-        setInput('')
-    }, []);
-
-    // clear calc screen
-    const removeNums = (e) => {
-        setPreState('0')
-        setCurrState('')
-        setInput('')
-    }
-
-    const backspace = () => {
-        setCurrState(currState.slice(0, -1))
-    }
-
-    const operatorType = (e) => {
-        setTotal(false);
-        setCurrState((prev) => prev +  e.target.innerText)
-        setOperator(e.target.innerText)
-        if(currState === '') return
-        if(preState !== '') {
-            equals()
-        }
-        setPreState(currState)
-        setCurrState('')
-    }
-
-    // start calculation Operator
-    const equals = (e) => {
-        if(e?.target.innerText === '=') {
-            setTotal(true)
-        }
-
-        let calc
-        switch(operator) {
-            case '/':
-                calc = String(parseFloat(preState) / parseFloat(currState));
-                break;
-
-            case '*':
-                calc = String(parseFloat(preState) * parseFloat(currState));
-                break;
-
-            case '+':
-                calc = String(parseFloat(preState) + parseFloat(currState));
-                break;
-
-            case '-':
-                calc = String(parseFloat(preState) - parseFloat(currState));
-                break;
-        }
-                setInput('');
-                setPreState(calc);
-                setCurrState('')
-
+    const operation = (e) => {
+        setValueNum(valueNum + e.target.value)
     }
 
   return (
     <div className="App">
       <div className={'container'}>
         <div className={'calc'}>
-            <div className={'screen'}>
-                {input !== "" || input === "0" ? (
-                    <NumericFormat
-                        value={input}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                    />
-                ) : (
-                    <NumericFormat
-                        value={preState}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                    />
-                )}
-            </div>
-
-            <div className={'btn control'} onClick={removeNums}>AC</div>
-            <div className={'btn control'} onClick={backspace}>x</div>
-            <div className={'btn control'} onClick={operatorType}>/</div>
-            <div className={'btn control'} onClick={''}>%</div>
-
-            <div className={'btn'} onClick={inputNumber}>7</div>
-            <div className={'btn'} onClick={inputNumber}>8</div>
-            <div className={'btn'} onClick={inputNumber}>9</div>
-            <div className={'btn control'} onClick={operatorType}>*</div>
-
-            <div className={'btn'} onClick={inputNumber}>4</div>
-            <div className={'btn'} onClick={inputNumber}>5</div>
-            <div className={'btn'} onClick={inputNumber}>6</div>
-            <div className={'btn control'} onClick={operatorType}>+</div>
-
-            <div className={'btn'} onClick={inputNumber}>3</div>
-            <div className={'btn'} onClick={inputNumber}>2</div>
-            <div className={'btn'} onClick={inputNumber}>1</div>
-            <div className={'btn control'} onClick={operatorType}>-</div>
-
-            <div className={'btn'} onClick={inputNumber}>0</div>
-            <div className={'btn'} onClick={inputNumber}>.</div>
-            <div className={'btn equal control'} onClick={equals}>=</div>
+            <h2>calculator</h2>
+          <form>
+                  <input type={'text'} value={valueNum} placeholder={'0'} />
+              <div>
+                  <input type={'button'} value={'AC'} onClick={ele => setValueNum('')} />
+                  <input type={'button'} value={'X'} onClick={ele => setValueNum(valueNum.slice(0, -1))} />
+                  <input type={'button'} value={'/'} onClick={operation} />
+                  <input type={'button'} value={'*'} onClick={operation} />
+              </div>
+              <div>
+                  <input type={'button'} value={'7'} onClick={operation} />
+                  <input type={'button'} value={'8'} onClick={operation}  />
+                  <input type={'button'} value={'9'} onClick={operation} />
+                  <input type={'button'} value={'-'} onClick={operation} />
+              </div>
+              <div>
+                  <input type={'button'} value={'4'} onClick={operation} />
+                  <input type={'button'} value={'5'} onClick={operation} />
+                  <input type={'button'} value={'6'} onClick={operation} />
+                  <input type={'button'} value={'+'} onClick={operation} />
+              </div>
+              <div>
+                  <input type={'button'} value={'1'} onClick={operation} />
+                  <input type={'button'} value={'2'} onClick={operation} />
+                  <input type={'button'} value={'3'} onClick={operation} />
+                  <input type={'button'} value={'='} className={'equal'} onClick={ele => setValueNum(eval(valueNum))} />
+              </div>
+              <div>
+                  <input type={'button'} value={'0'} className={'zero'}  onClick={operation} />
+                  <input type={'button'} value={'.'}  onClick={operation} />
+              </div>
+          </form>
         </div>
       </div>
     </div>
